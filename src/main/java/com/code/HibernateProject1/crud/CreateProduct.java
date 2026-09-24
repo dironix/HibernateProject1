@@ -1,0 +1,54 @@
+package com.code.HibernateProject1.crud;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.code.HibernateProject1.entity.Category;
+import com.code.HibernateProject1.entity.Product;
+
+public class CreateProduct {
+	//create a session factory
+	private SessionFactory sessionFactory;
+	//create constructor with arg sessionfactory
+	public CreateProduct(SessionFactory sessionFactory) {
+		
+		this.sessionFactory=sessionFactory;
+		//session object using the SessionFactory Object
+		Session session = sessionFactory.getCurrentSession();
+		////start the transaction to work with the session object
+		session.beginTransaction();
+		//set the id of category to assign the product
+		int categoryid = 2;
+		//get the  object from the category with categoryid
+		Category category = session.get(Category.class, categoryid);
+		//check the existence of the category with categoryid
+		if(category == null) {
+			System.out.println("Category with id"+categoryid+"not found");
+			return;
+		}
+		//show the current object value
+		System.out.println(category.toString());
+		//create the product object
+		Product product = new Product("Foundation", 500.00, 5, category);
+		//save object
+		session.persist(product);
+		//create second object
+		product = new Product("Lipstick", 300.00, 10, category);
+		//save object
+		session.persist(product);
+		//create third object
+		product = new Product("Primer", 400.00, 7, category);
+		//save object
+		session.persist(product);
+		
+		//to save into the database we have to call a commit
+		session.getTransaction().commit();
+		//close the session
+		session.close();
+		//give a message to user
+		System.out.println("Product is created successfully");
+		
+	}
+	
+
+}
